@@ -1,84 +1,365 @@
- <!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Invitación</title>
+  <title>Invitación Dino</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Arial; margin:0; background:#0b1020; color:#fff;}
-    .wrap{max-width:520px; margin:0 auto; padding:18px;}
-    .card{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
-      border-radius:18px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.35);}
-    h1{margin:6px 0 8px; font-size:26px;}
-    .tag{display:inline-block; padding:6px 10px; border-radius:999px;
-      background:rgba(255,255,255,.12); font-size:13px;}
-    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
-    .btn{flex:1; min-width:190px; text-align:center; padding:12px 14px; border-radius:14px;
-      text-decoration:none; color:#fff; font-weight:700; border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.10);}
-    .btn:hover{background:rgba(255,255,255,.18)}
-    .mini{opacity:.9; line-height:1.4}
-    .count{margin-top:14px; font-size:14px; opacity:.95}
-    .footer{margin-top:14px; font-size:12px; opacity:.75}
+    :root{
+      --bg1:#06140f; --bg2:#0c2a1f;
+      --card:rgba(255,255,255,.10);
+      --stroke:rgba(255,255,255,.16);
+      --txt:rgba(255,255,255,.94);
+      --muted:rgba(255,255,255,.76);
+
+      --leaf:#22c55e;
+      --amber:#f59e0b;
+      --sky:#38bdf8;
+      --ok:#34d399;
+      --danger:#fb7185;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--txt);
+      min-height:100vh;
+      overflow-x:hidden;
+
+      /* Fondo selva */
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(34,197,94,.24), transparent 60%),
+        radial-gradient(900px 500px at 85% 18%, rgba(56,189,248,.14), transparent 55%),
+        radial-gradient(700px 420px at 70% 90%, rgba(245,158,11,.12), transparent 55%),
+        linear-gradient(140deg, var(--bg1), var(--bg2));
+    }
+
+    .wrap{max-width:820px; margin:0 auto; padding:22px 16px 42px;}
+
+    .top{
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(8px);
+      font-size:13px; color:var(--muted);
+    }
+    .chip b{color:var(--txt)}
+    .chip .dot{
+      width:8px; height:8px; border-radius:999px; background:var(--leaf);
+      box-shadow:0 0 0 3px rgba(34,197,94,.18);
+    }
+
+    .card{
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.08));
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      padding:18px;
+      box-shadow: 0 18px 70px rgba(0,0,0,.42);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    /* textura y brillo */
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(650px 240px at 20% 0%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(420px 240px at 86% 14%, rgba(34,197,94,.22), transparent 60%),
+        radial-gradient(420px 240px at 65% 105%, rgba(245,158,11,.18), transparent 58%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 10px, rgba(255,255,255,.00) 10px 20px);
+      pointer-events:none;
+    }
+
+    /* huellitas */
+    .prints{
+      position:absolute; inset:0;
+      background-image:
+        radial-gradient(circle at 10px 10px, rgba(255,255,255,.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 18px 18px, rgba(255,255,255,.06) 0 2px, transparent 3px);
+      background-size:120px 120px;
+      transform: rotate(-8deg);
+      opacity:.22;
+      pointer-events:none;
+    }
+
+    .hero{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
+      position:relative;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:16px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .badge .emoji{
+      width:34px; height:34px; border-radius:12px;
+      display:grid; place-items:center;
+      background:rgba(34,197,94,.18);
+      border:1px solid rgba(34,197,94,.22);
+    }
+
+    h1{margin:8px 0 6px; font-size:36px; line-height:1.05; letter-spacing:-.7px}
+    .subtitle{margin:0 0 14px; color:var(--muted); font-size:15px; line-height:1.5}
+
+    .grid{
+      display:grid; gap:12px;
+      grid-template-columns: 1fr;
+      margin-top:10px;
+      position:relative;
+    }
+    @media(min-width:720px){
+      .grid{grid-template-columns:1.2fr .8fr;}
+    }
+
+    .info{
+      display:grid; gap:10px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(0,0,0,.14);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .line{display:flex; gap:10px; align-items:flex-start}
+    .icon{
+      width:36px; height:36px; border-radius:14px;
+      display:grid; place-items:center;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+      font-size:18px;
+    }
+    .line b{display:block; font-size:14px}
+    .line span{display:block; color:var(--muted); font-size:13px; margin-top:2px}
+
+    .actions{display:grid; gap:10px}
+    .btn{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:14px 14px;
+      border-radius:16px;
+      text-decoration:none;
+      color:var(--txt);
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.10);
+      transition: transform .12s ease, background .12s ease;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background:rgba(255,255,255,.16);}
+    .btn.map{
+      background:linear-gradient(135deg, rgba(56,189,248,.65), rgba(34,197,94,.55));
+      border-color: rgba(255,255,255,.18);
+    }
+    .btn.wa{
+      background:linear-gradient(135deg, rgba(52,211,153,.92), rgba(34,197,94,.45));
+      border-color: rgba(255,255,255,.18);
+    }
+    .btn.cal{
+      background:linear-gradient(135deg, rgba(245,158,11,.72), rgba(34,197,94,.35));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted); font-size:13px;
+      margin-top:12px;
+      position:relative;
+    }
+    .count{color:var(--txt); font-weight:800}
+
+    .extras{margin-top:14px; display:grid; gap:10px}
+    .extraCard{
+      padding:12px 14px; border-radius:18px;
+      background:rgba(0,0,0,.14);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted); font-size:13px; line-height:1.55
+    }
+    .extraCard b{color:var(--txt)}
+
+    .footer{margin-top:14px; color:rgba(255,255,255,.65); font-size:12px}
+
+    /* hojas decorativas */
+    .leaf{
+      position:absolute; width:160px; height:160px; border-radius: 70% 30% 70% 30%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.25), rgba(34,197,94,.45));
+      opacity:.22; filter: blur(.2px);
+      transform: rotate(18deg);
+      pointer-events:none;
+      animation: sway 7s ease-in-out infinite;
+    }
+    .l1{left:-70px; top:120px; animation-delay:.2s}
+    .l2{right:-80px; top:40px; transform: rotate(-22deg); opacity:.18; animation-delay:1.3s}
+    .l3{right:40px; bottom:-90px; width:130px; height:130px; opacity:.16; animation-delay:.6s}
+    @keyframes sway{0%,100%{transform: translateY(0) rotate(18deg)}50%{transform: translateY(-8px) rotate(12deg)}}
+
+    /* mini “dino” en texto */
+    .dinoTitle{
+      background: linear-gradient(90deg, rgba(34,197,94,.95), rgba(245,158,11,.85));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <div class="top">
+      <div class="chip"><span class="dot"></span> <b>Invitación Dino</b> interactiva</div>
+      <div class="chip">🦖 Selva • Huellitas • Botones</div>
+    </div>
+
     <div class="card">
-      <span class="tag">🎉 Invitación</span>
-      <h1 id="title">Cumple de NOMBRE</h1>
+      <div class="prints"></div>
+      <div class="leaf l1"></div>
+      <div class="leaf l2"></div>
+      <div class="leaf l3"></div>
 
-      <p class="mini" id="details">
-        📅 Sábado 20 de enero 2026 <br/>
-        ⏰ 5:00 pm <br/>
-        📍 Salón / Casa / Parque
-      </p>
+      <div class="hero">
+        <div>
+          <div class="badge">
+            <div class="emoji">🌿</div>
+            <div>¡Estás invitado a una <b>aventura jurásica</b>! 🦕</div>
+          </div>
 
-      <div class="row">
-        <a class="btn" id="btnMaps" target="_blank" rel="noopener">📍 Ver ubicación</a>
-        <a class="btn" id="btnWA" target="_blank" rel="noopener">✅ Confirmar por WhatsApp</a>
+          <h1 id="title"><span class="dinoTitle">Rugido de festejo</span> 🦖</h1>
+          <p class="subtitle" id="subtitle">
+            Prepárate para explorar la selva, comer pastel y celebrar en grande 🎂✨
+          </p>
+        </div>
       </div>
 
-      <div class="count" id="countdown">⏳ Cargando cuenta regresiva…</div>
+      <div class="grid">
+        <div class="info">
+          <div class="line">
+            <div class="icon">🦴</div>
+            <div>
+              <b>Festejado</b>
+              <span id="kid">NOMBRE • 5 años</span>
+            </div>
+          </div>
+          <div class="line">
+            <div class="icon">📅</div>
+            <div>
+              <b>Fecha y hora</b>
+              <span id="when">martes, 20 de enero de 2026, 5:00 p.m.</span>
+            </div>
+          </div>
+          <div class="line">
+            <div class="icon">📍</div>
+            <div>
+              <b>Lugar</b>
+              <span id="where">Salón / Casa / Parque</span>
+            </div>
+          </div>
+          <div class="line">
+            <div class="icon">🎁</div>
+            <div>
+              <b>Opcional</b>
+              <span id="gift">Regalo sugerido: (opcional)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn map" id="btnMaps" target="_blank" rel="noopener">🗺️ Ver ubicación</a>
+          <a class="btn wa" id="btnWA" target="_blank" rel="noopener">✅ Confirmar por WhatsApp</a>
+          <a class="btn cal" id="btnCalendar" target="_blank" rel="noopener">🗓️ Agregar al calendario</a>
+        </div>
+      </div>
+
+      <div class="pill">
+        ⏳ <span id="countdown" class="count">Cargando cuenta regresiva…</span>
+      </div>
+
+      <div class="extras">
+        <div class="extraCard" id="noteCard">
+          <b>Notas:</b> Ven con ropa cómoda • Habrá pastel 🎂 • ¡No faltes! 🦖
+        </div>
+      </div>
+
       <div class="footer">Tip: guarda este link y reenvíalo por WhatsApp 😊</div>
     </div>
   </div>
 
   <script>
-    // === PERSONALIZA AQUÍ ===
+    // =======================
+    // PERSONALIZA AQUÍ
+    // =======================
     const nombre = "NOMBRE";
-    const edad = "5"; // opcional
-    const fechaISO = "2026-01-20T17:00:00-06:00"; // fecha y hora del evento (Monterrey -06:00)
+    const edad = "5";
+    const fechaISO = "2026-01-20T17:00:00-06:00"; // ajusta fecha/hora
     const lugar = "Salón / Casa / Parque";
-    const mapsUrl = "https://maps.google.com/?q=Monterrey"; // pega aquí tu link de Google Maps
-    const whatsappNumero = "521XXXXXXXXXX"; // ej. 5218112345678 (sin +)
-    const mensajeWA = `Hola! Confirmo asistencia al cumple de ${nombre} 🥳`;
 
-    // === RENDER ===
-    document.getElementById("title").textContent = `🎂 Cumple de ${nombre} (${edad} años)`;
-    document.getElementById("details").innerHTML = `📅 ${new Date(fechaISO).toLocaleString("es-MX", { dateStyle:"full", timeStyle:"short" })}<br/>📍 ${lugar}`;
+    const regaloSugerido = ""; // ej: "Un dinosaurio / libro"
+    const notas = "Ven con ropa cómoda • Habrá pastel 🎂 • ¡No faltes! 🦖";
+
+    const mapsUrl = "https://maps.google.com/?q=Monterrey"; // pega tu link real
+    const whatsappNumero = "521XXXXXXXXXX"; // sin +
+    const mensajeWA = `Hola! Confirmo asistencia a la fiesta jurásica de ${nombre} 🦖🥳`;
+
+    // =======================
+    // RENDER
+    // =======================
+    document.getElementById("kid").textContent = `${nombre} • ${edad} años`;
+
+    const dt = new Date(fechaISO);
+    document.getElementById("when").textContent =
+      dt.toLocaleString("es-MX", { dateStyle:"full", timeStyle:"short" });
+
+    document.getElementById("where").textContent = lugar;
+
+    document.getElementById("gift").textContent = regaloSugerido
+      ? `Regalo sugerido: ${regaloSugerido}`
+      : "Regalo sugerido: (opcional)";
+
+    document.getElementById("noteCard").innerHTML = `<b>Notas:</b> ${notas}`;
+
+    document.getElementById("title").innerHTML =
+      `<span class="dinoTitle">Cumple jurásico</span> de ${nombre} 🦖`;
+
     document.getElementById("btnMaps").href = mapsUrl;
+    document.getElementById("btnWA").href =
+      `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(mensajeWA)}`;
 
-    const waLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(mensajeWA)}`;
-    document.getElementById("btnWA").href = waLink;
+    // Agregar al calendario (Google Calendar)
+    const end = new Date(dt.getTime() + 2*60*60*1000); // +2 horas
+    const fmt = d => d.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
+    const calUrl =
+      "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      `&text=${encodeURIComponent("Cumple jurásico de " + nombre)}` +
+      `&dates=${fmt(dt)}/${fmt(end)}` +
+      `&details=${encodeURIComponent("Invitación Dino interactiva")}` +
+      `&location=${encodeURIComponent(lugar)}`;
+    document.getElementById("btnCalendar").href = calUrl;
 
-    // === CUENTA REGRESIVA ===
-    const target = new Date(fechaISO).getTime();
+    // =======================
+    // CUENTA REGRESIVA
+    // =======================
+    const target = dt.getTime();
     const el = document.getElementById("countdown");
 
     function tick(){
       const now = Date.now();
       const diff = target - now;
       if(diff <= 0){
-        el.textContent = "🎉 ¡Hoy es el evento! 🎉";
+        el.textContent = "🎉 ¡Hoy es la aventura jurásica! 🎉";
         return;
       }
       const s = Math.floor(diff/1000);
       const d = Math.floor(s/86400);
       const h = Math.floor((s%86400)/3600);
       const m = Math.floor((s%3600)/60);
-      el.textContent = `⏳ Faltan ${d} días, ${h} horas y ${m} min`;
-      requestAnimationFrame(()=>setTimeout(tick, 1000));
+      el.textContent = `Faltan ${d} días, ${h} horas y ${m} min`;
+      setTimeout(tick, 1000);
     }
     tick();
   </script>
