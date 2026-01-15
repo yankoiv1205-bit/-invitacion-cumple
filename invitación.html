@@ -1,0 +1,86 @@
+ <!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invitación</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial; margin:0; background:#0b1020; color:#fff;}
+    .wrap{max-width:520px; margin:0 auto; padding:18px;}
+    .card{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+      border-radius:18px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.35);}
+    h1{margin:6px 0 8px; font-size:26px;}
+    .tag{display:inline-block; padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.12); font-size:13px;}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+    .btn{flex:1; min-width:190px; text-align:center; padding:12px 14px; border-radius:14px;
+      text-decoration:none; color:#fff; font-weight:700; border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.10);}
+    .btn:hover{background:rgba(255,255,255,.18)}
+    .mini{opacity:.9; line-height:1.4}
+    .count{margin-top:14px; font-size:14px; opacity:.95}
+    .footer{margin-top:14px; font-size:12px; opacity:.75}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <span class="tag">🎉 Invitación</span>
+      <h1 id="title">Cumple de NOMBRE</h1>
+
+      <p class="mini" id="details">
+        📅 Sábado 20 de enero 2026 <br/>
+        ⏰ 5:00 pm <br/>
+        📍 Salón / Casa / Parque
+      </p>
+
+      <div class="row">
+        <a class="btn" id="btnMaps" target="_blank" rel="noopener">📍 Ver ubicación</a>
+        <a class="btn" id="btnWA" target="_blank" rel="noopener">✅ Confirmar por WhatsApp</a>
+      </div>
+
+      <div class="count" id="countdown">⏳ Cargando cuenta regresiva…</div>
+      <div class="footer">Tip: guarda este link y reenvíalo por WhatsApp 😊</div>
+    </div>
+  </div>
+
+  <script>
+    // === PERSONALIZA AQUÍ ===
+    const nombre = "NOMBRE";
+    const edad = "5"; // opcional
+    const fechaISO = "2026-01-20T17:00:00-06:00"; // fecha y hora del evento (Monterrey -06:00)
+    const lugar = "Salón / Casa / Parque";
+    const mapsUrl = "https://maps.google.com/?q=Monterrey"; // pega aquí tu link de Google Maps
+    const whatsappNumero = "521XXXXXXXXXX"; // ej. 5218112345678 (sin +)
+    const mensajeWA = `Hola! Confirmo asistencia al cumple de ${nombre} 🥳`;
+
+    // === RENDER ===
+    document.getElementById("title").textContent = `🎂 Cumple de ${nombre} (${edad} años)`;
+    document.getElementById("details").innerHTML = `📅 ${new Date(fechaISO).toLocaleString("es-MX", { dateStyle:"full", timeStyle:"short" })}<br/>📍 ${lugar}`;
+    document.getElementById("btnMaps").href = mapsUrl;
+
+    const waLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(mensajeWA)}`;
+    document.getElementById("btnWA").href = waLink;
+
+    // === CUENTA REGRESIVA ===
+    const target = new Date(fechaISO).getTime();
+    const el = document.getElementById("countdown");
+
+    function tick(){
+      const now = Date.now();
+      const diff = target - now;
+      if(diff <= 0){
+        el.textContent = "🎉 ¡Hoy es el evento! 🎉";
+        return;
+      }
+      const s = Math.floor(diff/1000);
+      const d = Math.floor(s/86400);
+      const h = Math.floor((s%86400)/3600);
+      const m = Math.floor((s%3600)/60);
+      el.textContent = `⏳ Faltan ${d} días, ${h} horas y ${m} min`;
+      requestAnimationFrame(()=>setTimeout(tick, 1000));
+    }
+    tick();
+  </script>
+</body>
+</html>
